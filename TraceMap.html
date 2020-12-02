@@ -1,0 +1,429 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>默认样式信息窗体</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+    <script type="text/javascript" src="https://cache.amap.com/lbs/static/DrivingRender1230.js"></script>
+    <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+    <script type="text/javascript"
+            src="https://webapi.amap.com/maps?v=1.4.15&key=76b04712f8912c23435f8cf37e5fd620&plugin=AMap.Driving"></script>
+    <style>
+        html, body, #container {
+            height: 100%;
+            width: 100%;
+        }
+
+        #panel {
+            position: fixed;
+            background-color: white;
+            max-height: 90%;
+            overflow-y: auto;
+            top: 10px;
+            right: 10px;
+            width: 280px;
+        }
+
+        #panel .amap-lib-driving {
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .content-window-card {
+            position: relative;
+            box-shadow: none;
+            bottom: 0;
+            left: 0;
+            width: auto;
+            padding: 0;
+        }
+
+        .content-window-card p {
+            height: 2rem;
+        }
+
+        .custom-info {
+            border: solid 1px silver;
+        }
+
+        div.info-top {
+            position: relative;
+            background: none repeat scroll 0 0 #F9F9F9;
+            border-bottom: 1px solid #CCC;
+            border-radius: 5px 5px 0 0;
+        }
+
+        div.info-top div {
+            display: inline-block;
+            color: #333333;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 31px;
+            padding: 0 10px;
+        }
+
+        div.info-top img {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            transition-duration: 0.25s;
+        }
+
+        div.info-top img:hover {
+            box-shadow: 0px 0px 5px #000;
+        }
+
+        div.info-middle {
+            font-size: 12px;
+            padding: 10px 6px;
+            line-height: 20px;
+        }
+
+        div.info-bottom {
+            height: 0px;
+            width: 100%;
+            clear: both;
+            text-align: center;
+        }
+
+        div.info-bottom img {
+            position: relative;
+            z-index: 104;
+        }
+
+        span {
+            margin-left: 5px;
+            font-size: 11px;
+        }
+
+        .info-middle img {
+            float: left;
+            margin-right: 6px;
+        }
+
+        .input-cardzyl {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border-radius: .25rem;
+            width: 22rem;
+            border-width: 0;
+            border-radius: 0.4rem;
+            box-shadow: 0 2px 6px 0 rgba(114, 124, 245, .5);
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .input-card .btn {
+            margin-right: 1.2rem;
+            width: 9rem;
+        }
+
+        .input-card .btn:last-child {
+            margin-right: 0;
+        }
+        .mybtn {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            border: 1px solid transparent;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            background-color: transparent;
+            background-image: none;
+            color: #25A5F7;
+            border-color: #25A5F7;
+            padding: .25rem .5rem;
+            line-height: 1.5;
+            border-radius: 1rem;
+            -webkit-appearance: button;
+            cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+<div id="container"></div>
+<div class="input-cardzyl" id="tag"></div>
+<div class="input-card">
+    <h4>轨迹回放控制</h4>
+    <div class="input-item">
+        <input type="button" class="btn" value="下一个地点" id="start" onclick="nextAnimation()"/>
+        <input type="button" class="btn" value="上一个地点" id="pause" onclick="lastAnimation()"/>
+    </div>
+</div>
+<div id="panel"></div>
+</body>
+
+<script type="text/javascript">    //地图初始化时，在地图上添加一个marker标记,鼠标点击marker可弹出自定义的信息窗体
+
+var map = new AMap.Map("container", {
+    resizeEnable: true,
+    center: [116.482146, 39.875454],
+    zoom: 12
+});
+/* 地点定位信息 */
+var indicatePoint = order18061119;
+var points = [[116.477211, 39.875172], [116.469708,39.854884], [116.500058, 39.866604],
+    [116.55468,39.878469], [116.483994,39.903317], [116.460305,39.897259],
+    [116.504414, 39.877901], [116.558187,39.909523], [116.449729, 39.872549]];
+var buildingname=['北京工业大学', '大洋路批发市场','欢乐谷景区','白鹿公园','北京东站','北京富力万丽酒店','金源公寓','中国传媒大学','潘家园大厦'];
+
+/* 人员信息 */
+var message = new Array(9);
+message[0]=[points180611190];
+message[1]=[points180611191];
+message[2]=[points180611192];
+message[3]=[points180611193];
+message[4]=[points180611194];
+message[5]=[points180611195];
+message[6]=[points180611196];
+message[7]=[points180611197];
+message[8]=[points180611198];
+/* 全局信息生成 */
+var n = 0;
+while ((n<=8)&&(message[n].length !== 0)) {
+    n++;
+}
+var wholeFlag=0;
+/* 生成信息窗体 */
+var infoWindow = new Array(9);
+var briefMess = new Array(9);
+for (let i = 0; i < n; i++) {
+    briefMess[i] = "";
+    for (let j = 0; j < message[i].length; j++) {
+        briefMess[i] += '<input type="button" class="mybtn" value="'
+            + message[i][j][2] + "  " + message[i][j][1] + " (" + message[i][j][7] + ") (" + message[i][j][8]
+            + ')" onclick="getMessage('
+            + i + ',' + j +
+            ')"/>';
+        briefMess[i] += "<br/>";
+    }
+    infoWindow[i] = new AMap.InfoWindow
+    ({
+        isCustom: true,  //使用自定义窗体
+        content: createInfoWindow("接触人员信息--"+buildingname[indicatePoint[i]], briefMess[i]),
+        offset: new AMap.Pixel(16, -45)
+    });
+}
+infoWindow[0].show();
+//添加marker标记，并注册点击监听
+var marker = new Array(9);
+addMarker();
+marker[0].show();
+function addMarker() {
+    map.clearMap();
+    for (let i = 0; i < n; i++) {
+        //注册并显示标点
+        marker[i] = new AMap.Marker({
+            map: map,
+            position: points[indicatePoint[i]],
+            zoom: 14
+        });
+        marker[i].hide();
+        //鼠标点击marker弹出自定义的信息窗体
+        AMap.event.addListener(marker[i], 'click', function () {
+            infoWindow[i].open(map, marker[i].getPosition());
+        });
+    }
+}
+infoWindow[0].open(map,marker[0].getPosition());
+//构建自定义信息窗体
+function createInfoWindow(title, content) {
+    var info = document.createElement("div");
+    info.className = "custom-info input-card content-window-card";
+
+    //可以通过下面的方式修改自定义窗体的宽高
+    //info.style.width = "400px";
+    // 定义顶部标题
+    var top = document.createElement("div");
+    var titleD = document.createElement("div");
+    var closeX = document.createElement("img");
+    top.className = "info-top";
+    titleD.innerHTML = title;
+    closeX.src = "https://webapi.amap.com/images/close2.gif";
+    closeX.onclick = closeInfoWindow;
+
+    top.appendChild(titleD);
+    top.appendChild(closeX);
+    info.appendChild(top);
+
+    // 定义中部内容
+    var middle = document.createElement("div");
+    middle.className = "info-middle";
+    middle.style.backgroundColor = 'white';
+    middle.innerHTML = content;
+    info.appendChild(middle);
+
+    // 定义底部内容
+    var bottom = document.createElement("div");
+    bottom.className = "info-bottom";
+    bottom.style.position = 'relative';
+    bottom.style.top = '0px';
+    bottom.style.margin = '0 auto';
+    var sharp = document.createElement("img");
+    sharp.src = "https://webapi.amap.com/images/sharp.png";
+    bottom.appendChild(sharp);
+    info.appendChild(bottom);
+    return info;
+}
+//关闭信息窗体
+function closeInfoWindow() {
+    map.clearInfoWindow();
+}
+/* 展示详细信息 */
+function getMessage(i, j) {
+    document.getElementById("tag").innerHTML = "";
+    var info = document.createElement("div");
+    /* top column for close*/
+    var top = document.createElement("div");
+    var titleD = document.createElement("div");
+    var closeX = document.createElement("img");
+    top.className = "info-top";
+    titleD.innerHTML = "接触人员详细信息";
+    closeX.src = "https://webapi.amap.com/images/close2.gif";
+    closeX.onclick = closeMessage;
+
+    top.appendChild(titleD);
+    top.appendChild(closeX);
+    info.appendChild(top);
+    console.log(info);
+    /* internal message*/
+    var deMe = document.createElement("div");
+    deMe.innerHTML = "身份证号码：" + message[i][j][0] + '<br\>'
+        + "手机号码：" + message[i][j][1] + '<br\>'
+        + "姓名：" + message[i][j][2] + '<br\>'
+        + "住址：" + message[i][j][3] + '<br\>'
+        + "工作单位：" + message[i][j][4] + '<br\>'
+        + "性别：" + message[i][j][5] + '<br\>'
+        + "年龄：" + message[i][j][6] + '<br\>'
+        + "到达时间：" + message[i][j][7] + '<br\>'
+        + "离开时间：" + message[i][j][8] + '<br\>'
+        + "防护状况：" + message[i][j][9] + '<br\>';
+    document.getElementById("tag").appendChild(info);
+    document.getElementById("tag").appendChild(deMe);
+}
+/* 关闭详细信息窗口 */
+function closeMessage() {
+    document.getElementById("tag").innerHTML = "";
+}
+/* 覆盖物生成 */
+var circle=new Array(9);
+for(let i=0;i<n;i++){
+    circle[i] = new AMap.Circle({
+        map:map,
+        center: new AMap.LngLat(points[indicatePoint[i]][0], points[indicatePoint[i]][1]), // 圆心位置
+        radius: 1000,  //半径
+        strokeColor: "#F33",  //线颜色
+        strokeOpacity: 1,  //线透明度
+        strokeWeight: 3,  //线粗细度
+        fillColor: "#ee2200",  //填充颜色
+        fillOpacity: 0.35*(message[i].length/3.0) //填充透明度
+    });
+    circle[i].hide();
+}
+circle[0].show();
+
+/* 轨迹生成 */
+var trace=new Array(9);
+var lineArr=new Array(9);
+var polyline=new Array(9);
+var passedPolyline=new Array(9);
+var drivingOption = {
+    policy: AMap.DrivingPolicy.LEAST_TIME,
+    ferry: 1, // 是否可以使用轮渡
+    province: '京', // 车牌省份的汉字缩写
+};
+var driving = new AMap.Driving(drivingOption);
+var tempa=new Array(9);
+var tempb=new Array(9);
+for(let i=1;i<n;i++){
+    driving.search(new AMap.LngLat(points[indicatePoint[i-1]][0], points[indicatePoint[i-1]][1]),
+        new AMap.LngLat(points[indicatePoint[i]][0], points[indicatePoint[i]][1]), function(status, result) {
+            if (status === 'complete') {
+                if (result.routes && result.routes.length) {
+                    lineArr[i] = parseRouteToPath(result.routes[0]);
+                    setLintArr(lineArr[i],i);
+                }
+            }
+            else{
+                console.log("defeat\n",status);
+            }
+        });
+}
+function parseRouteToPath(route) {
+    var path = []
+    for (var i = 0, l = route.steps.length; i < l; i++) {
+        var step = route.steps[i]
+        for (var j = 0, n = step.path.length; j < n; j++) {
+            path.push(step.path[j])
+        }
+    }
+
+    return path
+}
+function setLintArr(path,i){
+    // 绘制轨迹
+    polyline[i] = new AMap.Polyline({
+        map: map,
+        path: path,
+        showDir:true,
+        strokeColor: "#28F",  //线颜色
+        // strokeOpacity: 1,     //线透明度
+        strokeWeight: 6,      //线宽
+        // strokeStyle: "solid"  //线样式
+        showDir:true
+    });
+    polyline[i].hide();
+
+    passedPolyline[i] = new AMap.Polyline({
+        map: map,
+        path: path,
+        strokeColor: "#AF5",  //线颜色
+        // strokeOpacity: 1,     //线透明度
+        strokeWeight: 6,      //线宽
+        // strokeStyle: "solid"  //线样式
+    });
+    passedPolyline[i].hide();
+
+}
+function nextAnimation () {
+    if(wholeFlag<n-1){
+        wholeFlag++;
+        marker[wholeFlag].show();
+        infoWindow[wholeFlag].open(map,marker[wholeFlag].getPosition());
+        circle[wholeFlag].show();
+        if(wholeFlag!==1) passedPolyline[wholeFlag-1].show();
+        polyline[wholeFlag].show();
+        map.setFitView(null,null,null,13);
+    }
+
+}
+function lastAnimation () {
+    if(wholeFlag>0){
+        marker[wholeFlag].hide();
+        infoWindow[wholeFlag-1].open(map,marker[wholeFlag-1].getPosition());
+        circle[wholeFlag].hide();
+        polyline[wholeFlag].hide();
+        passedPolyline[--wholeFlag].hide();
+        map.setFitView(null,null,null,13);
+    }
+}
+
+</script>
+</html>

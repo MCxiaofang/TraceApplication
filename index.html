@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>标注和标注图层-海量点</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <style>
+        html, body, #container {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+        .amap-info-window{
+            width: 150px;
+            background: #fff;
+            border-radius: 3px;
+            padding: 3px 7px;
+            box-shadow: 0 2px 6px 0 rgba(114, 124, 245, .5);
+            position: relative;
+        }
+        .amap-info-sharp{
+            position: absolute;
+            top: 21px;
+            bottom: 0;
+            left: 50%;
+            margin-left: -8px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #fff;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+
+<div class="info">
+    <h4>海量点展示</h4>
+    <p>模式：<span id="mapView">3D</span></p>
+    <p>海量点数量：<span id="massNumber">30000</span></p>
+</div>
+<script type="text/javascript"
+        src="https://webapi.amap.com/maps?v=1.4.15&key=76b04712f8912c23435f8cf37e5fd620"></script>
+<script type="text/javascript" src="https://a.amap.com/jsapi_demos/static/demo-center/data/mock_position.js"></script>
+<script type="text/javascript">
+    var map = new AMap.Map('container', {
+        zoom: 9,
+        showLabel: false,
+        expandZoomRange: true,
+        center: [116.12, 40.11],
+        viewMode: '3D',
+        pitch: 60,
+        mapStyle: 'amap://styles/whitesmoke',
+    });
+
+    map.on('complete', function () {
+        var viewData = {'2D': 3E3, '3D': 3E4};
+        var curViewMode = map.getViewMode_();
+
+        // 创建 AMap.LabelsLayer 图层
+        var layer = new AMap.LabelsLayer({
+            zooms: [3, 20],
+            zIndex: 111,
+            // 关闭标注避让，默认为开启，v1.4.15 新增属性
+            animation: false,
+            // 关闭标注淡入动画，默认为开启，v1.4.15 新增属性
+            collision: false
+        });
+
+        // 将图层添加到地图
+        map.add(layer);
+
+        var markers = [];
+        var positions = Positions.slice(0, viewData[curViewMode]);
+
+        var icon = {
+            type: 'image',
+            image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
+            size: [6, 9],
+            anchor: 'bottom-center',
+            angel: 0,
+            retina: true
+        };
+
+        for (var i = 0; i < positions.length; i++) {
+            var curPosition = positions[i];
+            var curData = {
+                position: curPosition,
+                icon
+            };
+
+            var labelMarker = new AMap.LabelMarker(curData);
+            // 事件
+            labelMarker.on('mouseover', function(e){
+                var position = e.data.data && e.data.data.position;
+
+                if(position){
+                    normalMarker.setContent(
+                        '<div class="amap-info-window">'
+                        + position +
+                        '<div class="amap-info-sharp"></div>' +
+                        '</div>');
+                    normalMarker.setPosition(position);
+                    map.add(normalMarker);
+                }
+            });
+
+            labelMarker.on('mouseout', function(){
+                map.remove(normalMarker);
+            });
+
+            markers.push(labelMarker);
+        }
+
+        // 一次性将海量点添加到图层
+        layer.add(markers);
+
+        // 普通点
+        var normalMarker = new AMap.Marker({
+            offset: new AMap.Pixel(-75, -40),
+        });
+
+        var mapViewElement = document.getElementById('mapView');
+        var massNumberElement = document.getElementById('massNumber');
+        mapViewElement.innerHTML = curViewMode;
+        massNumberElement.innerHTML = viewData[curViewMode];
+    });
+</script>
+</body>
+</html>
