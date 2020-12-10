@@ -1,6 +1,7 @@
 package StaticClass;
 
 import BaseClass.RB_Tree;
+import BaseClass.ST_RB_Tree;
 import BaseClass.TPerson;
 
 import java.io.BufferedReader;
@@ -35,6 +36,35 @@ public class LoadMessage {
                     tree.insert(new TPerson(numbersArray[i], numbersArray[i + 1], numbersArray[i + 2], numbersArray[i + 3],
                             numbersArray[i + 4], numbersArray[i + 5], numbersArray[i + 6],
                             numbersArray[i + 8], numbersArray[i + 9], numbersArray[i + 7]));
+                }
+            } else {
+                System.out.println("Error for finding file");
+            }
+        } catch (Exception e) {
+            System.out.println("Error for load message");
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadPerson(String filePath, ST_RB_Tree tree,int building) {
+        try {
+            System.gc();
+            file = new File(filePath);
+            if (file.isFile() && file.exists()) {
+                read = new InputStreamReader(new FileInputStream(file), encoding);
+                bufferedReader = new BufferedReader(read);
+
+                lineTxt = null;
+                str = new StringBuilder();
+                while ((lineTxt = bufferedReader.readLine()) != null) {
+                    str.append(lineTxt);
+                }
+                numbersArray = str.toString().split("@");
+
+                for (int i = 0; i < numbersArray.length; i = i + 10) {
+                    tree.insert(new TPerson(numbersArray[i].substring(0,17), numbersArray[i + 1], numbersArray[i + 2], numbersArray[i + 3],
+                            numbersArray[i + 4], numbersArray[i + 5], numbersArray[i + 6],
+                            numbersArray[i + 8], numbersArray[i + 9], numbersArray[i + 7],building));
                 }
             } else {
                 System.out.println("Error for finding file");

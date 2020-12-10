@@ -10,14 +10,9 @@ public class SaveMessage {
     public static String[] locName={"北京工业大学","大洋路批发市场","欢乐谷景区","白鹿公园",
             "北京东站","北京富力万丽酒店","金源公寓","中国传媒大学","潘家园大厦"};
     public static boolean save(String filePath, RB_Node result){
-        deleteDir("Result");
         FileOutputStream fileOutputStream = null;
         File file = new File(filePath);
         String resStr="";
-        /*while(result!=null){
-            resStr+=result.data.toString()+"\n";
-            result=result.next;
-        }*/
         resStr=result.jsString();
         try {
             if(file.exists()){

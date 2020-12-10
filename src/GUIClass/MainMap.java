@@ -1,25 +1,11 @@
 package GUIClass;
 
-import java.awt.*;
 
-import javax.swing.*;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-
-import chrriis.common.UIUtils;
-import chrriis.dj.nativeswing.swtimpl.NativeInterface;
-import chrriis.dj.nativeswing.swtimpl.NativeInterfaceAdapter;
-import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
-
-import java.nio.ByteOrder;
-import java.util.*;
-import java.util.regex.*;
 
 public class MainMap {
     /* Converts the content of an HTML file to a string */

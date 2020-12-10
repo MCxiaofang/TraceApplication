@@ -46,6 +46,15 @@ public class Person {
                 +"\",\""+personAge;
     }
 
-
+    public String htmlString(){
+        return "<html><body>身份证号码："+personID
+                +"<br>手机号码："+personPhone
+                +"<br>姓名："+personName
+                +"<br>住址："+personLive
+                +"<br>工作单位："+personWork
+                +"<br>性别："+personSex
+                +"<br>年龄："+personAge
+                +"<br>";
+    }
 
 }

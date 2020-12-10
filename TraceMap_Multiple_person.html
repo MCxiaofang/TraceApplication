@@ -175,29 +175,51 @@
 var map = new AMap.Map("container", {
     resizeEnable: true,
     center: [116.482146, 39.875454],
-    zoom: 14
+    zoom: 12
 });
 /* 地点定位信息 */
-var indicatePoint = [0,1,2,];
-var points = [[116.477211, 39.875172], [116.467469, 39.870692], [116.500058, 39.866604],
-    [116.478729, 39.893213], [116.462786, 39.870029], [116.489362, 39.864364], [116.504414, 39.877901], [116.508723,39.867756], [116.449729, 39.872549]];
+var indicatePoint = order18061119_1;
+var indicatePoint_2 = order18061119_2;
+var points = [[116.477211, 39.875172], [116.469708,39.854884], [116.500058, 39.866604],
+    [116.55468,39.878469], [116.483994,39.903317], [116.460305,39.897259],
+    [116.504414, 39.877901], [116.558187,39.909523], [116.449729, 39.872549]];
+var points_2 = [[116.487211, 39.885172], [116.479708,39.864884], [116.510058, 39.876604],
+    [116.56468,39.888469], [116.493994,39.913317], [116.470305,39.907259],
+    [116.514414, 39.887901], [116.568187,39.919523], [116.459729, 39.882549]];
+var buildingname=['北京工业大学', '大洋路批发市场','欢乐谷景区','白鹿公园','北京东站','北京富力万丽酒店','金源公寓','中国传媒大学','潘家园大厦'];
+
 /* 人员信息 */
 var message = new Array(9);
-message[0]=[["140221199710301815","18335254244","邵川","山西省大同市南郊区同泉东路兴旺水泥有限责任公司西南123米","北京理工大学","男","46","2020-09-01 08:51:05","2020-09-01 10:19:39","false"],["140203199412163212","15110771493","邵雅东","山西省大同市南郊区晋华宫基督教堂北640米","北京工业大学","女","52","2020-09-01 08:28:31","2020-09-01 09:08:16","true"],["140211197202174416","13096696098","李叶伟","山西省大同市阳高县云门街金宝贝幼儿园-南门南341米","清华大学","女","40","2020-09-01 08:12:16","2020-09-01 08:55:54","true"],["140222197906093517","13700526837","马志强","山西省大同市南郊区云水瑶洗浴附近41米","北京工业大学","女","41","2020-09-01 08:30:56","2020-09-01 08:42:08","true"],];
-message[1]=[["140203195703133939","18986051492","申正全","山西省大同市南郊区和七区-东区东北310米","北京工业大学","男","21","2020-09-01 09:17:43","2020-09-01 11:33:00","true"],["140225200010091125","13734200231","刘文娟","山西省大同市浑源县浑源县疾病预防控制中心-预防接种门诊南270米","中国人民大学","男","27","2020-09-01 08:10:58","2020-09-01 09:26:19","true"],["140623199110250510","17535293201","伊福龙","山西省大同市南郊区平安大道新区里附近33米","北京邮电大学","女","26","2020-09-01 09:15:48","2020-09-01 09:20:11","true"],["14022519930410343X","17703523993","杜玉明","山西省大同市城区北都街城墙带状公园内,大同南城墙西北208米","北京工业大学","男","52","2020-09-01 09:54:32","2020-09-01 12:30:11","false"],["140211199910056110","18035209056","褚佳君","山西省大同市南郊区G109(京拉线)丁升弘壮商贸城东870米","北京工业大学","男","39","2020-09-01 09:30:28","2020-09-01 12:02:31","false"],["140227200010060516","15735274058","邓一帆","山西省大同市大同县南环东路云州区倍加造中学东北608米","北京工业大学","男","17","2020-09-01 09:49:28","2020-09-01 11:14:07","false"],["140224199405084219","18835239265","董悦","山西省大同市灵丘县","清华大学","女","16","2020-09-01 09:58:41","2020-09-01 12:47:12","true"],];
-message[2]=[["140225199801051626","18735234882","范叶","山西省大同市浑源县天峰南路浑源昊海汽修附近28米","中国人民大学","男","30","2020-09-01 08:55:01","2020-09-01 10:00:29","false"],["140203200001052927","15034213891","董莉群","山西省大同市南郊区平泉路丽秀苑小区-西门附近23米","北京工业大学","女","28","2020-09-01 08:27:58","2020-09-01 11:14:10","true"],["140203196704020033","13100129290","武文军","山西省大同市南郊区大同煤炭职业技术学院内","北京工业大学","女","50","2020-09-01 08:22:03","2020-09-01 10:05:10","true"],["140223199807104212","13363529958","王选斌","山西省大同市南郊区云山街辅路钣金烤漆南412米","中国人民大学","男","28","2020-09-01 08:32:50","2020-09-01 10:34:28","false"],["14022519930410343X","17703523993","杜玉明","山西省大同市城区北都街城墙带状公园内,大同南城墙西北208米","北京工业大学","男","52","2020-09-01 10:01:07","2020-09-01 12:20:34","false"],["142124197808241212","15035262566","孙广兴","山西省大同市灵丘县云彩岭站东北591米","23","男","55","2020-09-01 09:44:22","2020-09-01 12:41:13","false"],["140202200003041520","18735222185","张沐春","山西省大同市城区西马路12号红卫星住宅小区附近34米","北京理工大学","女","37","2020-09-01 08:58:32","2020-09-01 11:49:46","true"],["14021119930621002X","17535210025","丰宇瑞","山西省大同市城区北都街御华帝景内,金水湾幼儿园附近9米","北京大学","男","35","2020-09-01 09:08:01","2020-09-01 12:01:30","false"],["140202198210300513","13753241112","马晋宝","山西省大同市城区西环路永安里小区内,征费小区-1号楼附近45米","北京理工大学","女","43","2020-09-01 09:52:56","2020-09-01 11:13:07","true"],["140211197508154418","13835282611","张彦","山西省大同市城区北都街月亮湾内","北京工业大学","女","21","2020-09-01 10:52:46","2020-09-01 13:51:53","true"],["140225200103173437","13754919742","孟劭臻","山西省大同市城区新华南街2号东风园-A7号楼附近40米","清华大学","女","55","2020-09-01 10:34:05","2020-09-01 13:02:51","true"],["14022719970708001X","15840465732","马继超","山西省大同市大同县景山路云州区示范中学内","北京大学","男","59","2020-09-01 10:44:57","2020-09-01 13:12:19","false"],];
-message[3]=[];
-message[4]=[];
-message[5]=[];
-message[6]=[];
-message[7]=[];
-message[8]=[];
+message[0]=[points180611190_1];
+message[1]=[points180611191_1];
+message[2]=[points180611192_1];
+message[3]=[points180611193_1];
+message[4]=[points180611194_1];
+message[5]=[points180611195_1];
+message[6]=[points180611196_1];
+message[7]=[points180611197_1];
+message[8]=[points180611198_1];
+var message_2 = new Array(9);
+message_2[0]=[points180611190_2];
+message_2[1]=[points180611191_2];
+message_2[2]=[points180611192_2];
+message_2[3]=[points180611193_2];
+message_2[4]=[points180611194_2];
+message_2[5]=[points180611195_2];
+message_2[6]=[points180611196_2];
+message_2[7]=[points180611197_2];
+message_2[8]=[points180611198_2];
 /* 全局信息生成 */
 var n = 0;
+var n_2=0;
 while ((n<=8)&&(message[n].length !== 0)) {
     n++;
 }
+while ((n_2<=8)&&(message_2[n_2].length !== 0)) {
+    n_2++;
+}
 var wholeFlag=0;
+var wholeFlag_2=0;
 /* 生成信息窗体 */
 var infoWindow = new Array(9);
 var briefMess = new Array(9);
@@ -214,16 +236,36 @@ for (let i = 0; i < n; i++) {
     infoWindow[i] = new AMap.InfoWindow
     ({
         isCustom: true,  //使用自定义窗体
-        content: createInfoWindow("接触人员信息", briefMess[i]),
+        content: createInfoWindow("接触人员信息--"+buildingname[indicatePoint[i]], briefMess[i]),
         offset: new AMap.Pixel(16, -45)
     });
 }
+infoWindow[0].show();
+var infoWindow_2 = new Array(9);
+var briefMess_2 = new Array(9);
+for (let i = 0; i < n_2; i++) {
+    briefMess_2[i] = "";
+    for (let j = 0; j < message_2[i].length; j++) {
+        briefMess_2[i] += '<input type="button" class="mybtn" value="'
+            + message_2[i][j][2] + "  " + message_2[i][j][1] + " (" + message_2[i][j][7] + ") (" + message_2[i][j][8]
+            + ')" onclick="getMessage_2('
+            + i + ',' + j +
+            ')"/>';
+        briefMess_2[i] += "<br/>";
+    }
+    infoWindow_2[i] = new AMap.InfoWindow
+    ({
+        isCustom: true,  //使用自定义窗体
+        content: createInfoWindow("接触人员信息--"+buildingname[indicatePoint_2[i]], briefMess_2[i]),
+        offset: new AMap.Pixel(16, -45)
+    });
+}
+infoWindow_2[0].show();
 //添加marker标记，并注册点击监听
 var marker = new Array(9);
 addMarker();
 marker[0].show();
 function addMarker() {
-    map.clearMap();
     for (let i = 0; i < n; i++) {
         //注册并显示标点
         marker[i] = new AMap.Marker({
@@ -238,6 +280,26 @@ function addMarker() {
         });
     }
 }
+infoWindow[0].open(map,marker[0].getPosition());
+var marker_2 = new Array(9);
+addMarker_2();
+marker_2[0].show();
+function addMarker_2() {
+    for (let i = 0; i < n_2; i++) {
+        //注册并显示标点
+        marker_2[i] = new AMap.Marker({
+            map: map,
+            position: points_2[indicatePoint_2[i]],
+            zoom: 14
+        });
+        marker_2[i].hide();
+        //鼠标点击marker弹出自定义的信息窗体
+        AMap.event.addListener(marker_2[i], 'click', function () {
+            infoWindow_2[i].open(map, marker_2[i].getPosition());
+        });
+    }
+}
+infoWindow_2[0].open(map,marker_2[0].getPosition());
 //构建自定义信息窗体
 function createInfoWindow(title, content) {
     var info = document.createElement("div");
@@ -313,6 +375,38 @@ function getMessage(i, j) {
     document.getElementById("tag").appendChild(info);
     document.getElementById("tag").appendChild(deMe);
 }
+/* 展示详细信息 */
+function getMessage_2(i, j) {
+    document.getElementById("tag").innerHTML = "";
+    var info = document.createElement("div");
+    /* top column for close*/
+    var top = document.createElement("div");
+    var titleD = document.createElement("div");
+    var closeX = document.createElement("img");
+    top.className = "info-top";
+    titleD.innerHTML = "接触人员详细信息";
+    closeX.src = "https://webapi.amap.com/images/close2.gif";
+    closeX.onclick = closeMessage;
+
+    top.appendChild(titleD);
+    top.appendChild(closeX);
+    info.appendChild(top);
+    console.log(info);
+    /* internal message*/
+    var deMe = document.createElement("div");
+    deMe.innerHTML = "身份证号码：" + message_2[i][j][0] + '<br\>'
+        + "手机号码：" + message_2[i][j][1] + '<br\>'
+        + "姓名：" + message_2[i][j][2] + '<br\>'
+        + "住址：" + message_2[i][j][3] + '<br\>'
+        + "工作单位：" + message_2[i][j][4] + '<br\>'
+        + "性别：" + message_2[i][j][5] + '<br\>'
+        + "年龄：" + message_2[i][j][6] + '<br\>'
+        + "到达时间：" + message_2[i][j][7] + '<br\>'
+        + "离开时间：" + message_2[i][j][8] + '<br\>'
+        + "防护状况：" + message_2[i][j][9] + '<br\>';
+    document.getElementById("tag").appendChild(info);
+    document.getElementById("tag").appendChild(deMe);
+}
 /* 关闭详细信息窗口 */
 function closeMessage() {
     document.getElementById("tag").innerHTML = "";
@@ -323,19 +417,34 @@ for(let i=0;i<n;i++){
     circle[i] = new AMap.Circle({
         map:map,
         center: new AMap.LngLat(points[indicatePoint[i]][0], points[indicatePoint[i]][1]), // 圆心位置
-        radius: 500,  //半径
+        radius: 1000,  //半径
         strokeColor: "#F33",  //线颜色
         strokeOpacity: 1,  //线透明度
         strokeWeight: 3,  //线粗细度
         fillColor: "#ee2200",  //填充颜色
-        fillOpacity: 0.35 //填充透明度
+        fillOpacity: 0.35*(message[i].length/3.0) //填充透明度
     });
     circle[i].hide();
 }
 circle[0].show();
+/* 覆盖物生成 */
+var circle_2=new Array(9);
+for(let i=0;i<n_2;i++){
+    circle_2[i] = new AMap.Circle({
+        map:map,
+        center: new AMap.LngLat(points_2[indicatePoint_2[i]][0], points_2[indicatePoint_2[i]][1]), // 圆心位置
+        radius: 1000,  //半径
+        strokeColor: "#214aff",  //线颜色
+        strokeOpacity: 1,  //线透明度
+        strokeWeight: 3,  //线粗细度
+        fillColor: "#214aff",  //填充颜色
+        fillOpacity: 0.35*(message_2[i].length/3.0) //填充透明度
+    });
+    circle_2[i].hide();
+}
+circle_2[0].show();
 
 /* 轨迹生成 */
-var trace=new Array(9);
 var lineArr=new Array(9);
 var polyline=new Array(9);
 var passedPolyline=new Array(9);
@@ -345,8 +454,6 @@ var drivingOption = {
     province: '京', // 车牌省份的汉字缩写
 };
 var driving = new AMap.Driving(drivingOption);
-var tempa=new Array(9);
-var tempb=new Array(9);
 for(let i=1;i<n;i++){
     driving.search(new AMap.LngLat(points[indicatePoint[i-1]][0], points[indicatePoint[i-1]][1]),
         new AMap.LngLat(points[indicatePoint[i]][0], points[indicatePoint[i]][1]), function(status, result) {
@@ -354,6 +461,29 @@ for(let i=1;i<n;i++){
                 if (result.routes && result.routes.length) {
                     lineArr[i] = parseRouteToPath(result.routes[0]);
                     setLintArr(lineArr[i],i);
+                }
+            }
+            else{
+                console.log("defeat\n",status);
+            }
+        });
+}
+var lineArr_2=new Array(9);
+var polyline_2=new Array(9);
+var passedPolyline_2=new Array(9);
+var drivingOption = {
+    policy: AMap.DrivingPolicy.LEAST_TIME,
+    ferry: 1, // 是否可以使用轮渡
+    province: '京', // 车牌省份的汉字缩写
+};
+var driving_2 = new AMap.Driving(drivingOption);
+for(let i=1;i<n_2;i++){
+    driving_2.search(new AMap.LngLat(points_2[indicatePoint_2[i-1]][0], points_2[indicatePoint_2[i-1]][1]),
+        new AMap.LngLat(points_2[indicatePoint_2[i]][0], points_2[indicatePoint_2[i]][1]), function(status, result) {
+            if (status === 'complete') {
+                if (result.routes && result.routes.length) {
+                    lineArr_2[i] = parseRouteToPath(result.routes[0]);
+                    setLintArr_2(lineArr_2[i],i);
                 }
             }
             else{
@@ -397,23 +527,70 @@ function setLintArr(path,i){
     passedPolyline[i].hide();
 
 }
+function setLintArr_2(path,i){
+    // 绘制轨迹
+    polyline_2[i] = new AMap.Polyline({
+        map: map,
+        path: path,
+        showDir:true,
+        strokeColor: "#ff1a1f",  //线颜色
+        // strokeOpacity: 1,     //线透明度
+        strokeWeight: 6,      //线宽
+        // strokeStyle: "solid"  //线样式
+        showDir:true
+    });
+    polyline_2[i].hide();
+
+    passedPolyline_2[i] = new AMap.Polyline({
+        map: map,
+        path: path,
+        strokeColor: "#f061ff",  //线颜色
+        // strokeOpacity: 1,     //线透明度
+        strokeWeight: 6,      //线宽
+        // strokeStyle: "solid"  //线样式
+    });
+    passedPolyline_2[i].hide();
+
+}
 function nextAnimation () {
+    if(wholeFlag_2<n_2-1){
+        wholeFlag_2++;
+        marker_2[wholeFlag_2].show();
+        infoWindow_2[wholeFlag_2].open(map,marker_2[wholeFlag_2].getPosition());
+        circle_2[wholeFlag_2].show();
+        if(wholeFlag_2!==1) passedPolyline_2[wholeFlag_2-1].show();
+        polyline_2[wholeFlag_2].show();
+        map.setFitView(null,null,null,13);
+    }
     if(wholeFlag<n-1){
-        marker[++wholeFlag].show();
+        wholeFlag++;
+        marker[wholeFlag].show();
+        infoWindow[wholeFlag].open(map,marker[wholeFlag].getPosition());
         circle[wholeFlag].show();
         if(wholeFlag!==1) passedPolyline[wholeFlag-1].show();
         polyline[wholeFlag].show();
-        map.setFitView();
+        map.setFitView(null,null,null,13);
     }
 
 }
 function lastAnimation () {
+    if(wholeFlag_2>0){
+        marker_2[wholeFlag_2].hide();
+        infoWindow_2[wholeFlag_2-1].open(map,marker_2[wholeFlag_2-1].getPosition());
+        circle_2[wholeFlag_2].hide();
+        polyline_2[wholeFlag_2].hide();
+        wholeFlag_2--;
+        if(wholeFlag_2!==0) passedPolyline_2[wholeFlag_2].hide();
+        map.setFitView(null,null,null,13);
+    }
     if(wholeFlag>0){
         marker[wholeFlag].hide();
+        infoWindow[wholeFlag-1].open(map,marker[wholeFlag-1].getPosition());
         circle[wholeFlag].hide();
         polyline[wholeFlag].hide();
-        passedPolyline[--wholeFlag].hide();
-        map.setFitView();
+        wholeFlag--;
+        if(wholeFlag!==0)passedPolyline[wholeFlag].hide();
+        map.setFitView(null,null,null,13);
     }
 }
 

@@ -1,10 +1,9 @@
 package GUIClass;
 
 import BaseClass.RB_Node;
+import StaticClass.CSS;
 import StaticClass.Date;
 import StaticClass.SaveMessage;
-import chrriis.common.UIUtils;
-import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,13 +79,11 @@ public class SearchPanel extends JPanel implements ActionListener {
         /* Initializes the confirm and clean button */
         confirm = new JButton("确认");
         clear = new JButton("清空");
-        visual=new JButton("地图");
-        confirm.setPreferredSize(new Dimension(80, 40));
-        clear.setPreferredSize(new Dimension(80, 40));
-        visual.setPreferredSize(new Dimension(80, 40));
-        confirm.setFont(new Font("宋体", Font.BOLD, 20));
-        clear.setFont(new Font("宋体", Font.BOLD, 20));
-        visual.setFont(new Font("宋体", Font.BOLD, 20));
+        visual = new JButton("地图");
+        CSS.CSS_BUTTON_1(confirm);
+        CSS.CSS_BUTTON_1(clear);
+        CSS.CSS_BUTTON_1(visual);
+
         confirm.addActionListener(this);
         clear.addActionListener(this);
         visual.addActionListener(this);
@@ -107,41 +104,44 @@ public class SearchPanel extends JPanel implements ActionListener {
                 JOptionPane.showMessageDialog(null,
                         "输入格式有误！", "提示", JOptionPane.WARNING_MESSAGE);
             }
-        }
-        else if (e.getSource() == frame.searchPanel.confirm) {
-            String order= new String("[");
-            String message[]=new String[9];
-            for(int i=0;i<9;i++){
-                message[i]=new String("");
+        } else if (e.getSource() == frame.searchPanel.confirm) {
+            StringBuilder order = new StringBuilder(new String("["));
+            String[] message = new String[9];
+            long[] arrTime = new long[9];
+
+            for (int i = 0; i < 9; i++) {
+                message[i] = new String("");
             }
-            int fixi=0;
+            BubbleSort(cb, arrTimeIn, outTimeIn);
+            SaveMessage.deleteDir("Result");
+            int fixI = 0;
             for (int i = 0; i < dynamicFlag; i++) {
                 RB_Node result;
-                int locate=city.flagfix(cb[i].getSelectedItem().toString());
+                int locate = city.flagfix(cb[i].getSelectedItem().toString());
                 result = frame.traceTree[locate].search(
                         Date.parseInt(arrTimeIn[i].getText()), Date.parseInt(outTimeIn[i].getText()),
                         frame.traceTree[locate].getRoot());
 
                 if (result != null) {
-                    order=order+locate+",";
-                    message[i-fixi]=result.jsString();
+                    arrTime[i - fixI] = Date.parseInt(arrTimeIn[i].getText());
+                    order.append(locate).append(",");
+                    message[i - fixI] = result.jsString();
                     SaveMessage.save("Result//" + SaveMessage.locName[locate] + ".txt", result);
-                }
-                else{
-                    fixi++;
+                } else {
+                    fixI++;
                 }
             }
-            order+="]";
+            order.append("]");
 
-            String temphtml=MainMap.readToString("TraceMap.html");
-            for(int i=0;i<9;i++){
-                temphtml=temphtml.replaceFirst("points18061119"+i,message[i]);
+
+            String temphtml = MainMap.readToString("TraceMap.html");
+            for (int i = 0; i < 9; i++) {
+                temphtml = temphtml.replaceFirst("points18061119" + i, message[i]);
             }
-            temphtml=temphtml.replaceFirst("order18061119",order);
-            frame.html=temphtml;
+            temphtml = temphtml.replaceFirst("order18061119", order.toString());
+            frame.html = temphtml;
             SaveMessage.SaveHtml(frame.html);
-        }
-        else if (e.getSource() == frame.searchPanel.clear) {
+        } else if (e.getSource() == frame.searchPanel.clear) {
             for (int i = 0; i < posjp.length; i++) {
                 posjp[i].removeAll();
                 posjp[i].setVisible(false);
@@ -152,13 +152,12 @@ public class SearchPanel extends JPanel implements ActionListener {
             init0();
             init1();
             init2();
-        }
-        else if(e.getSource()==frame.searchPanel.visual){
+        } else if (e.getSource() == frame.searchPanel.visual) {
             File file = new File("ResultMap.html");
-            Runtime ce=Runtime.getRuntime();
+            Runtime ce = Runtime.getRuntime();
             System.out.println(file.getAbsolutePath());
             try {
-                ce.exec("cmd /c start "+file.getAbsolutePath());
+                ce.exec("cmd /c start " + file.getAbsolutePath());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -203,5 +202,21 @@ public class SearchPanel extends JPanel implements ActionListener {
         posjp[dynamicFlag].setVisible(true);
     }
 
-
+    public void BubbleSort(JComboBox<String>[] cb, JTextField[] arrTimeIn, JTextField[] outTimeIn) {
+        for (int i = 0; i < dynamicFlag - 1; i++) {
+            for (int j = 0; j < dynamicFlag - 1 - i; j++) {
+                if (Date.parseInt(arrTimeIn[j].getText()) > (Date.parseInt(arrTimeIn[j + 1].getText()))) {
+                    JTextField temparr = arrTimeIn[j];
+                    arrTimeIn[j]=arrTimeIn[j+1];
+                    arrTimeIn[j+1]=temparr;
+                    JTextField tempout = outTimeIn[j];
+                    outTimeIn[j]=outTimeIn[j+1];
+                    outTimeIn[j+1]=tempout;
+                    JComboBox<String> temp = cb[j];
+                    cb[j]=cb[j+1];
+                    cb[j+1]=temp;
+                }
+            }
+        }
+    }
 }

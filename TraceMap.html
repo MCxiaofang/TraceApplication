@@ -340,7 +340,6 @@ for(let i=0;i<n;i++){
 circle[0].show();
 
 /* 轨迹生成 */
-var trace=new Array(9);
 var lineArr=new Array(9);
 var polyline=new Array(9);
 var passedPolyline=new Array(9);
@@ -350,8 +349,6 @@ var drivingOption = {
     province: '京', // 车牌省份的汉字缩写
 };
 var driving = new AMap.Driving(drivingOption);
-var tempa=new Array(9);
-var tempb=new Array(9);
 for(let i=1;i<n;i++){
     driving.search(new AMap.LngLat(points[indicatePoint[i-1]][0], points[indicatePoint[i-1]][1]),
         new AMap.LngLat(points[indicatePoint[i]][0], points[indicatePoint[i]][1]), function(status, result) {
@@ -420,7 +417,8 @@ function lastAnimation () {
         infoWindow[wholeFlag-1].open(map,marker[wholeFlag-1].getPosition());
         circle[wholeFlag].hide();
         polyline[wholeFlag].hide();
-        passedPolyline[--wholeFlag].hide();
+        wholeFlag--;
+        if(wholeFlag!=0)passedPolyline[wholeFlag].hide();
         map.setFitView(null,null,null,13);
     }
 }

@@ -5,6 +5,7 @@ import StaticClass.Date;
 public class TPerson extends Person {
     public Date arrTime,outTime;
     public boolean isProtect;
+    public int building;
 
     public TPerson(){
         this.personName="测试成功";
@@ -18,6 +19,15 @@ public class TPerson extends Person {
         this.arrTime=new Date(arrTime);
         this.outTime=new Date(outTime);
         this.isProtect=(Integer.parseInt(isProtect)==1);
+    }
+    public TPerson(String personID,String personPhone,String personName,String personLive,
+                   String personWork,String personSex,String personAge,
+                   String arrTime,String outTime,String isProtect,int building){
+        super(personID,personPhone,personName,personLive,personWork,personSex,Integer.parseInt(personAge));
+        this.arrTime=new Date(arrTime);
+        this.outTime=new Date(outTime);
+        this.isProtect=(Integer.parseInt(isProtect)==1);
+        this.building=building;
     }
 
     public long getMin(){
@@ -41,5 +51,13 @@ public class TPerson extends Person {
                 "\",\""+arrTime.toString()+
                 "\",\""+outTime.toString()+
                 "\",\""+isProtect+"\"]";
+    }
+
+    public String htmlString(){
+        return super.htmlString()+
+                "到达时间："+arrTime.toString()+
+                "<br>离开时间："+outTime.toString()+
+                "<br>防护状况："+isProtect+
+                "<br></body></html>";
     }
 }
